@@ -1,0 +1,152 @@
+[
+  {
+    "table_name": "Chamados",
+    "column_name": "Id",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "Chamados",
+    "column_name": "Titulo",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "Chamados",
+    "column_name": "Descricao",
+    "data_type": "text"
+  },
+  {
+    "table_name": "Chamados",
+    "column_name": "Prioridade",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "Chamados",
+    "column_name": "Status",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "Chamados",
+    "column_name": "DataCriacao",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "Chamados",
+    "column_name": "DataFechamento",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "Chamados",
+    "column_name": "UsuarioSolicitanteId",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "Chamados",
+    "column_name": "TecnicoResponsavelId",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "Chamados",
+    "column_name": "SolucaoIAId",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "LogsChamado",
+    "column_name": "Id",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "LogsChamado",
+    "column_name": "ChamadoId",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "LogsChamado",
+    "column_name": "UsuarioId",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "LogsChamado",
+    "column_name": "DataHora",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "LogsChamado",
+    "column_name": "AcaoRealizada",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "LogsChamado",
+    "column_name": "Detalhes",
+    "data_type": "text"
+  },
+  {
+    "table_name": "SolucoesIA",
+    "column_name": "Id",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "SolucoesIA",
+    "column_name": "Texto",
+    "data_type": "text"
+  },
+  {
+    "table_name": "SolucoesIA",
+    "column_name": "DataGeracao",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "SolucoesIA",
+    "column_name": "ChamadoId",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "Usuarios",
+    "column_name": "Id",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "Usuarios",
+    "column_name": "Nome",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "Usuarios",
+    "column_name": "Email",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "Usuarios",
+    "column_name": "SenhaHash",
+    "data_type": "text"
+  },
+  {
+    "table_name": "Usuarios",
+    "column_name": "TipoUsuario",
+    "data_type": "integer"
+  },
+  {
+    "table_name": "Usuarios",
+    "column_name": "IsActive",
+    "data_type": "boolean"
+  },
+  {
+    "table_name": "Usuarios",
+    "column_name": "CreatedAt",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "Usuarios",
+    "column_name": "UpdatedAt",
+    "data_type": "timestamp with time zone"
+  },
+  {
+    "table_name": "__EFMigrationsHistory",
+    "column_name": "MigrationId",
+    "data_type": "character varying"
+  },
+  {
+    "table_name": "__EFMigrationsHistory",
+    "column_name": "ProductVersion",
+    "data_type": "character varying"
+  }
+]

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoDesk</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="logo.png" alt="NeoDesk Logo">
+                <span>NeoDesk</span>
+            </div>
+            <nav class="menu">
+                <a href="#" class="menu-item active" data-screen="fila-espera">Fila de espera</a>
+                <a href="#" class="menu-item" data-screen="dashboard">Dashboard</a>
+                <a href="#" class="menu-item">Agenda</a>
+                <a href="#" class="menu-item">Relatórios</a>
+                <a href="#" class="menu-item">Configurações</a>
+                <a href="#" class="menu-item admin-only" data-screen="usuarios" style="display: none;">Usuários</a>
+                <a href="#" class="menu-item">Ajuda</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <span id="current-user-name">Usuário</span>
+                    <span id="current-user-type" class="user-type">Funcionário</span>
+                    <div class="user-actions-footer">
+                        <button class="btn-logout" id="logout-btn">Sair</button>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <main class="main-content">
+            <header class="main-header">
+                <nav class="top-nav">
+                    <a href="#" class="nav-link active" data-screen="fila-espera">Meus chamados</a>
+                    <a href="#" class="nav-link" data-screen="dashboard">Dashboard</a>
+                    <a href="#" class="nav-link">Agenda</a>
+                </nav>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="abrir-chamado-btn">Abrir Chamado</button>
+                    <button class="btn btn-success admin-only" id="novo-usuario-btn" style="display: none;">+ Novo Usuário</button>
+                    <div class="separator"></div>
+                    <div class="user-actions">
+                        <button class="icon-button" id="reload-btn" title="Recarregar chamados">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="m3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                        </button>
+                        <button class="icon-button" id="dark-mode-toggle" title="Alternar modo escuro">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                        </button>
+                        <button class="icon-button"><img src="bell.svg" alt="Notificações"></button>
+                        <button class="icon-button"><img src="rss.svg" alt="Feed"></button>
+                        <button class="icon-button"><img src="settings.svg" alt="Configurações"></button>
+                        <button class="icon-button"><img src="user.svg" alt="Usuário"></button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Tela de Fila de Espera -->
+            <section class="content screen active" id="fila-espera">
+                <div class="content-header">
+                    <h2>Fila de espera</h2>
+                    <div class="search-container">
+                        <div class="search-bar">
+                            <input type="text" placeholder="Pesquisar" id="search-input">
+                            <button class="search-button" id="search-btn">
+                                <img src="search.svg" alt="Pesquisar">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="chamados-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox"></th>
+                                <th>Tipo de chamado</th>
+                                <th>ID</th>
+                                <th>Resumo</th>
+                                <th>Solicitante</th>
+                                <th>Atribuição</th>
+                                <th>Status</th>
+                                <th>Criado em</th>
+                                <th>Prazo</th>
+                                <th>Prioridade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Os dados da API serão inseridos aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tela de Detalhes do Chamado -->
+            <section class="content screen" id="detalhes-chamado">
+                <div class="content-header">
+                    <h2>Detalhes do Chamado</h2>
+                    <button class="btn btn-secondary" id="voltar-btn">← Voltar</button>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary active">Responder</button>
+                    <button class="btn btn-secondary">Editar</button>
+                    <button class="btn btn-warning">Encerrar</button>
+                    <button class="btn btn-success">Encaminhar</button>
+                </div>
+
+                <div class="chamado-details">
+                    <div class="chamado-info">
+                        <div class="info-item">
+                            <label>ID</label>
+                            <span id="detail-id">#000342</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Status</label>
+                            <span id="detail-status">Pendente</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Prioridade</label>
+                            <span id="detail-prioridade">Alta</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Solicitante</label>
+                            <span id="detail-solicitante">Miguel</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Técnico Responsável</label>
+                            <span id="detail-tecnico">Miguel</span>
+                        </div>
+                        <div class="info-item">
+                            <label>Data de Criação</label>
+                            <span id="detail-data">16/07/2025</span>
+                        </div>
+                    </div>
+                    
+                    <div class="chamado-description">
+                        <label>Descrição</label>
+                        <div class="description-content" id="detail-descricao">
+                            Descrição do chamado aparecerá aqui...
+                        </div>
+                    </div>
+                    
+                    <div class="info-box">
+                        <h4>Anexos</h4>
+                        <div id="detail-anexos" class="anexos-list">
+                            <!-- Anexos serão carregados aqui -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tela de Dashboard -->
+            <section class="content screen" id="dashboard">
+                <div class="content-header">
+                    <h2>Dashboard</h2>
+                    <div class="dashboard-filters">
+                        <div class="date-filter">
+                            <input type="date" id="data-inicio" value="2025-02-28">
+                            <input type="date" id="data-fim" value="2025-05-14">
+                            <button class="filter-button" id="filtrar-btn">
+                                <img src="search.svg" alt="Filtrar" style="width: 14px; height: 14px; filter: invert(100%); margin-right: 5px;">
+                                Filtrar
+                            </button>
+                        </div>
+                        <button class="btn btn-secondary" style="margin-left: auto;">
+                            <img src="download.svg" alt="Baixar" style="width: 14px; height: 14px; margin-right: 5px;">
+                            Baixar
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h4>Chamados por Status</h4>
+                        <div class="chart-placeholder">Gráfico de Pizza - Status dos Chamados</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Chamados por Prioridade</h4>
+                        <div class="chart-placeholder">Gráfico de Pizza - Prioridade dos Chamados</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Chamados por Período</h4>
+                        <div class="chart-placeholder">Gráfico de Barras - Chamados por Mês</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Tempo Médio de Resolução</h4>
+                        <div class="chart-placeholder">Gráfico de Linha - Tempo de Resolução</div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h4>Métricas Gerais</h4>
+                        <div class="chart-placeholder">Cards com Estatísticas</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h4>Técnicos Mais Ativos</h4>
+                        <div class="chart-placeholder">Lista de Técnicos</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tela de Gestão de Usuários (apenas para administradores) -->
+            <section class="content screen" id="usuarios">
+                <div class="content-header">
+                    <h2>Gestão de Usuários</h2>
+                    <div class="search-container">
+                        <div class="search-bar">
+                            <input type="text" placeholder="Pesquisar usuários" id="search-usuarios-input">
+                            <button class="search-button" id="search-usuarios-btn">
+                                <img src="search.svg" alt="Pesquisar">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table id="usuarios-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox"></th>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>E-mail</th>
+                                <th>Tipo</th>
+                                <th>Status</th>
+                                <th>Criado em</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Os dados da API serão inseridos aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal de Confirmação de Logout -->
+    <div class="modal" id="logout-confirmation-modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3>Confirmar Saída</h3>
+                <button class="modal-close" id="logout-confirmation-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza de que deseja sair do sistema?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="logout-cancel">Cancelar</button>
+                <button class="btn btn-danger" id="logout-confirm">Sair</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Abrir Chamado -->
+    <div class="modal" id="abrir-chamado-modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3>Abrir Novo Chamado</h3>
+                <button class="modal-close" id="abrir-chamado-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="abrir-chamado-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="chamado-titulo">Título do Chamado *</label>
+                            <input type="text" id="chamado-titulo" name="titulo" required maxlength="255" placeholder="Descreva brevemente o problema ou solicitação">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="chamado-prioridade">Prioridade *</label>
+                            <select id="chamado-prioridade" name="prioridade" required>
+                                <option value="">Selecione a prioridade...</option>
+                                <option value="0">Baixa</option>
+                                <option value="1">Média</option>
+                                <option value="2">Alta</option>
+                                <option value="3">Urgente</option>
+                                <option value="4">Crítica</option>
+                            </select>
+                        </div>
+                        <div class="form-group tecnico-only" style="display: none;">
+                            <label for="chamado-tecnico">Técnico Responsável</label>
+                            <select id="chamado-tecnico" name="tecnicoResponsavelId">
+                                <option value="">Atribuir automaticamente</option>
+                                <!-- Técnicos serão carregados dinamicamente -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="chamado-descricao">Descrição Detalhada *</label>
+                            <textarea id="chamado-descricao" name="descricao" rows="8" placeholder="Descreva detalhadamente o problema, incluindo:&#10;- O que você estava tentando fazer&#10;- O que aconteceu&#10;- Quando o problema começou&#10;- Se afeta outros usuários" required></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="chamado-categoria">Categoria</label>
+                            <select id="chamado-categoria" name="categoria">
+                                <option value="">Selecione uma categoria...</option>
+                                <option value="hardware">Hardware</option>
+                                <option value="software">Software</option>
+                                <option value="rede">Rede/Conectividade</option>
+                                <option value="email">E-mail</option>
+                                <option value="impressora">Impressora</option>
+                                <option value="acesso">Acesso/Permissões</option>
+                                <option value="solicitacao">Solicitação de Serviço</option>
+                                <option value="outros">Outros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="chamado-urgencia">Impacto no Trabalho</label>
+                            <select id="chamado-urgencia" name="urgencia">
+                                <option value="">Selecione o impacto...</option>
+                                <option value="bloqueante">Bloqueante - Não consigo trabalhar</option>
+                                <option value="alto">Alto - Dificulta muito o trabalho</option>
+                                <option value="medio">Médio - Causa alguns inconvenientes</option>
+                                <option value="baixo">Baixo - Não afeta o trabalho</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="chamado-anexos">Anexos (opcional)</label>
+                            <input type="file" id="chamado-anexos" name="anexos" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.txt">
+                            <small class="form-help">Formatos aceitos: JPG, PNG, PDF, DOC, DOCX, TXT (máx. 10MB por arquivo)</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-info">
+                        <div class="info-box">
+                            <h4>📋 Dicas para um bom chamado:</h4>
+                            <ul>
+                                <li>Seja específico no título e descrição</li>
+                                <li>Inclua capturas de tela se relevante</li>
+                                <li>Mencione quando o problema começou</li>
+                                <li>Informe se afeta outros usuários</li>
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="abrir-chamado-cancelar">Cancelar</button>
+                <button class="btn btn-primary" id="abrir-chamado-salvar">
+                    <span class="btn-text">Abrir Chamado</span>
+                    <span class="btn-loading" style="display: none;">
+                        <span class="loading-spinner"></span>
+                        Criando...
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Novo Usuário -->
+    <div class="modal" id="novo-usuario-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Novo Usuário</h3>
+                <button class="modal-close" id="novo-usuario-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="novo-usuario-form">
+                    <div class="form-group">
+                        <label for="novo-nome">Nome</label>
+                        <input type="text" id="novo-nome" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="novo-email">E-mail</label>
+                        <input type="email" id="novo-email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nova-senha">Senha</label>
+                        <input type="password" id="nova-senha" name="senha" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmar-nova-senha">Confirmar Senha</label>
+                        <input type="password" id="confirmar-nova-senha" name="confirmarSenha" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="novo-tipo">Tipo de Usuário</label>
+                        <select id="novo-tipo" name="tipoUsuario" required>
+                            <option value="">Selecione...</option>
+                            <option value="0">Funcionário</option>
+                            <option value="1">Técnico</option>
+                            <option value="2">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="senha-admin-confirmacao">Confirme sua senha de administrador</label>
+                        <input type="password" id="senha-admin-confirmacao" name="senhaAdminConfirmacao" required placeholder="Digite sua senha atual para confirmar">
+                        <small class="form-help">Por segurança, confirme sua senha atual para criar um novo usuário.</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="novo-usuario-cancelar">Cancelar</button>
+                <button class="btn btn-primary" id="novo-usuario-salvar">
+                    <span class="btn-text">Salvar</span>
+                    <span class="btn-loading" style="display: none;">
+                        <span class="loading-spinner"></span>
+                        Salvando...
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
