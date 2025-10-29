@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 // URL base da API (substitua pela URL real da sua API)
-const API_BASE_URL = "https://localhost:7080";
+const API_BASE_URL = "http://localhost:7080";
 
 // Mapeamento de enums para exibição
 const StatusChamadoMap = {
@@ -22,14 +22,11 @@ const PrioridadeMap = {
 
 const TipoUsuarioMap = {
     0: "Funcionário",
-    1: "Técnico",
-    2: "Administrador"
+    1: "Administrador",
+    2: "Técnico"
 };
 
-// Configurar axios para ignorar certificados SSL (apenas para desenvolvimento)
-axios.defaults.httpsAgent = {
-    rejectUnauthorized: false
-};
+// Configuração de axios removida (usando HTTP em vez de HTTPS)
 
 // Estado global da aplicação
 let currentChamados = [];
@@ -113,14 +110,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("current-user-type").textContent = TipoUsuarioMap[currentUser.tipoUsuario] || "Desconhecido";
             
             // Mostrar elementos específicos para administradores
-            if (currentUser.tipoUsuario === 2) { // Administrador
+            if (currentUser.tipoUsuario === 1) { // Administrador
                 document.querySelectorAll(".admin-only").forEach(el => {
                     el.style.display = "";
                 });
             }
 
             // Mostrar elementos específicos para técnicos e administradores
-            if (currentUser.tipoUsuario === 1 || currentUser.tipoUsuario === 2) { // Técnico ou Administrador
+            if (currentUser.tipoUsuario === 1 || currentUser.tipoUsuario === 2) { // Administrador ou Técnico
                 document.querySelectorAll(".tecnico-only").forEach(el => {
                     el.style.display = "";
                 });
@@ -257,14 +254,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function createChamado(chamadoData) {
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/Chamados`, chamadoData, {
+            // Converter FormData para objeto JSON se necessário
+            let jsonData = chamadoData;
+            if (chamadoData instanceof FormData) {
+                jsonData = {};
+                for (let [key, value] of chamadoData.entries()) {
+                    // Ignorar anexos por enquanto (a API pode não suportar)
+                    if (key !== 'anexos') {
+                        jsonData[key] = value;
+                    }
+                }
+            }
+            
+            const response = await axios.post(`${API_BASE_URL}/api/Chamados`, jsonData, {
                 headers: {
-                    'Content-Type': chamadoData instanceof FormData ? 'multipart/form-data' : 'application/json'
+                    'Content-Type': 'application/json'
                 }
             });
             return response.data;
         } catch (error) {
             console.error("Erro ao criar chamado:", error);
+            console.error("Resposta da API:", error.response?.data);
             throw error;
         }
     }
@@ -281,7 +291,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function authenticateUser(email, senha) {
         try {
-            const response = await axios.post(`${API_BASE_URL}/api/Usuarios/authenticate`, { email, senha });
+            const response = await axios.post(`${API_BASE_URL}/api/Usuarios/authenticate?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(senha)}`);
             return response.data;
         } catch (error) {
             console.error("Erro na autenticação:", error);
