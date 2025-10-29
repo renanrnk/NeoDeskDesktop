@@ -131,53 +131,42 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Funções de API
     async function fetchChamados(filters = {}) {
-        try {
-            let url = `${API_BASE_URL}/api/Chamados`;
-            const params = new URLSearchParams();
-            
-            // Controle de acesso: Funcionários só veem seus próprios chamados
-            if (currentUser && currentUser.tipoUsuario === 0) { // Funcionário
-                params.append("usuarioSolicitanteId", currentUser.id);
-            }
-            
-            if (filters.status !== undefined) params.append("status", filters.status);
-            if (filters.prioridade !== undefined) params.append("prioridade", filters.prioridade);
-            if (filters.usuarioSolicitanteId !== undefined) params.append("usuarioSolicitanteId", filters.usuarioSolicitanteId);
-            if (filters.tecnicoResponsavelId !== undefined) params.append("tecnicoResponsavelId", filters.tecnicoResponsavelId);
-            
-            if (params.toString()) {
-                url += "?" + params.toString();
-            }
-            
-            const response = await axios.get(url);
-            return response.data;
-        } catch (error) {
-            console.error("Erro ao buscar chamados da API:", error);
-            // Retornar dados de exemplo em caso de erro
-            return [
-                {
-                    id: 1,
-                    titulo: "Problema com acesso ao sistema",
-                    descricao: "Não consigo logar no sistema de RH.",
-                    prioridade: 1,
-                    status: 0,
-                    dataCriacao: "2025-10-03T17:26:43.547Z",
-                    usuarioSolicitanteNome: "Funcionário User",
-                    tecnicoResponsavelNome: "Técnico User"
-                },
-                {
-                    id: 2,
-                    titulo: "Solicitação de nova funcionalidade",
-                    descricao: "Gostaria de uma funcionalidade para exp",
-                    prioridade: 2,
-                    status: 1,
-                    dataCriacao: "2025-10-03T17:26:43.547Z",
-                    usuarioSolicitanteNome: "Funcionário User",
-                    tecnicoResponsavelNome: "Técnico User"
-                }
-            ];
+        const tryUrls = [
+            `${API_BASE_URL}/api/Chamados`,                // ex: http://localhost:7080
+            `${API_BASE_URL.replace(/^http:/, 'https:')}/api/Chamados`, // https variant
+            `https://localhost:7080/api/Chamados`,        // fallback
+            `http://127.0.0.1:7080/api/Chamados`          // fallback 127.0.0.1
+        ];
+
+        // build params same as before
+        const params = new URLSearchParams();
+        if (currentUser && currentUser.tipoUsuario === 0) { // Funcionário só vê os seus
+            params.append("usuarioSolicitanteId", currentUser.id);
         }
+        if (filters.status !== undefined) params.append("status", filters.status);
+        if (filters.prioridade !== undefined) params.append("prioridade", filters.prioridade);
+        if (filters.usuarioSolicitanteId !== undefined) params.append("usuarioSolicitanteId", filters.usuarioSolicitanteId);
+        if (filters.tecnicoResponsavelId !== undefined) params.append("tecnicoResponsavelId", filters.tecnicoResponsavelId);
+
+        for (const baseUrl of tryUrls) {
+            let url = baseUrl;
+            if (params.toString()) url += "?" + params.toString();
+            try {
+                const resp = await axios.get(url, { timeout: 5000 });
+                console.log("fetchChamados: sucesso usando", url);
+                return resp.data;
+            } catch (err) {
+                console.warn("fetchChamados: falha em", url, err.message || err);
+                // continue para próxima tentativa
+            }
+        }
+
+        // Se todas falharem, mostra erro no UI e retorna array vazio
+        showToast("Não foi possível conectar à API (verifique se o backend está rodando).", "error");
+        return [];
     }
+
+
 
     async function fetchChamadoById(id) {
         try {
@@ -1002,6 +991,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     async function loadChamados() {
         currentChamados = await fetchChamados();
         renderChamados(currentChamados);
+        console.log(`Usuário logado: ${currentUser.nome} (Tipo: ${currentUser.tipoUsuario})`);
     }
 
     async function loadUsuarios() {
